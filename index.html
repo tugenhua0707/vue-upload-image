@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>演示Vue</title>
+    <script src="./libs/vue.js"></script>
+    <link rel="stylesheet" href="./css/index.css" />
+    <script src="./js/uploadImg.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h3>vue实现上传图片效果</h3>
+      <tb-upload-image :data="initData"></tb-upload-image>
+
+      <h3>隐藏拖放区域</h3>
+      <tb-upload-image :data="initData2" :drag-drop="0" :fold="0"></tb-upload-image>
+    </div>
+    <script id="tb-upload-image" type="text/x-template">
+      <div class="tb-upload-image">
+        <div 
+          class="upload_box" 
+          :style="{'width': elemWidth + 'px'}">
+          <div class="upload-inner">
+            <span 
+              class='foldbtn' 
+              v-if="foldBtn" 
+              @click="foldFunc()"
+              :class="{'up': !isShrinkage}"
+            ></span>
+            <div class="upload_choose">
+              <a href="javascript:void(0)" class="file">
+                选择图片
+                <input type="file" :value="inputVal" multiple accept="image/jpeg,image/jpg,image/png" @change="getFiles($event)"/>
+                <input type="hidden" v-model="hiddenVal" />
+              </a>
+            </div>
+            <div class="upload_main" v-show="!isShrinkage">
+              <div v-if="isDragDrop">
+                <span class="upload_drag_area" @dragover="dragHover($event)" @dragleave="dragHover($event)" @drop="getFiles($event)">或者将图片拖到此处</span>
+              </div>
+              <div class="upload_preview" v-if="fileFilter.length">
+                <ul ref="preview_list" :data-item="timeStamp">
+                  <li class="upload_append_list" v-for="(item, index) in fileFilter">
+                    <div class="m-layer"></div>
+                    <span 
+                      class="ajax-loader"
+                      :class="{'show-loading': item.isclickUploadBtn}"
+                    ></span>
+                    <p>
+                      <span href="javascript:void(0)" class="upload_delete" @click="deleteItem(index)"></span>
+                      <i 
+                        class="upload-progress"
+                        :class="{'success': item.successStatus}"
+                      ></i>
+                      <em>
+                        <img :src="item.imgUrl" />
+                      </em>
+                    </p>
+                    <a class="filename" :title="item.name">{{item.name}}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="upload_submit" v-if="fileFilter.length">
+                <input type="submit" class="upload_submit_btn" value="上传图片" @click="uploadFiles()"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    <script type="text/javascript">
+      var data = [
+        {
+          "url": 'https://img.alicdn.com/tfs/TB11nHZXWagSKJjy0FgXXcRqFXa-218-46.png'
+        },
+        {
+          "url": 'https://img.alicdn.com/simba/img/TB1WT41SVXXXXaSXpXXSutbFXXX.jpg'
+        }
+      ];
+      new Vue({
+        el: '#app',
+        data() {
+          return {
+            initData: data,
+            initData2: []
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
