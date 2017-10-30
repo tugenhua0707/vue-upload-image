@@ -251,6 +251,9 @@ Vue.component('tb-upload-image', {
                   inputValue = newUrl;
                 }
                 self.hiddenVal = inputValue;
+                // 对外提供事件的触发
+                self.$emit('changeValue', self.hiddenVal);
+
               }, 3000);
             })(file);
           }
@@ -288,6 +291,8 @@ Vue.component('tb-upload-image', {
       } else {
         this.hiddenVal = hiddenValues.join(',');
       }
+      // 对外提供事件的触发
+      this.$emit('changeValue', self.hiddenVal);
     },
     foldFunc() {
       if (!this.isShrinkage) {
